@@ -1,14 +1,15 @@
 'use strict';
 
-const srcDir = global.conf.ui.paths.source;
-
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 
-const utilsGulp = require('../../../gulp/utils');
+const appDir = global.appDir;
+const utils = require(`${appDir}/core/lib/utils`);
+
+const jsSrcDir = utils.pathResolve(conf.ui.paths.source.jsSrc);
 
 gulp.task('eslint', function () {
-  return gulp.src(utilsGulp.pathResolve(srcDir.js) + '/src/**/*.js')
+  return gulp.src(jsSrcDir.js + '/**/*.js')
     .pipe(plugins.eslint())
     .pipe(plugins.eslint.format());
 });
