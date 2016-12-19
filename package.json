@@ -2,15 +2,16 @@
   "name": "fp-eslint",
   "version": "0.0.2",
   "description": "ESLint extension for Fepper client-side JavaScript",
-  "dependencies": {
-    "gulp-eslint": "^2.0.0"
-  },
+  "main": "eslint~extend.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/electric-eloquence/fp-eslint.git"
+    "url": "git+https://github.com/electric-eloquence/fp-eslint.git"
   },
   "license": "MIT",
   "engines": {
     "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "gulp-eslint": "^2.0.0"
   }
 }
