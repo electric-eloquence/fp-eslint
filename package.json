@@ -13,5 +13,24 @@
   },
   "dependencies": {
     "gulp-eslint": "^2.0.0"
-  }
+  },
+  "keywords": [
+    "atomic",
+    "component",
+    "design",
+    "end",
+    "eslint",
+    "fepper",
+    "front",
+    "front-end",
+    "frontend",
+    "lab",
+    "library",
+    "lint",
+    "pattern",
+    "prototype",
+    "prototyper",
+    "prototyping",
+    "template"
+  ]
 }
