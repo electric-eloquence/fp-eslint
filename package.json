@@ -7,13 +7,6 @@
     "type": "git",
     "url": "git+https://github.com/electric-eloquence/fp-eslint.git"
   },
-  "license": "MIT",
-  "engines": {
-    "node": ">=7.6.0"
-  },
-  "dependencies": {
-    "gulp-eslint": "^2.0.0"
-  },
   "keywords": [
     "atomic",
     "component",
@@ -32,5 +25,12 @@
     "prototyper",
     "prototyping",
     "template"
-  ]
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "dependencies": {
+    "gulp-eslint": "^3.0.1"
+  }
 }
