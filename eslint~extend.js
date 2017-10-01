@@ -9,7 +9,8 @@ const utils = require(`${appDir}/core/lib/utils`);
 const jsSrcDir = utils.pathResolve(conf.ui.paths.source.jsSrc);
 
 gulp.task('eslint', function () {
-  return gulp.src(jsSrcDir.js + '/**/*.js')
+  return gulp.src(jsSrcDir + '/**/*.js')
     .pipe(plugins.eslint())
-    .pipe(plugins.eslint.format());
+    .pipe(plugins.eslint.format())
+    .pipe(plugins.eslint.failAfterError());
 });
