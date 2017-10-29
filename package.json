@@ -27,6 +27,10 @@
     "template"
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/electric-eloquence/fp-eslint/issues"
+  },
+  "homepage": "https://github.com/electric-eloquence/fp-eslint#readme",
   "engines": {
     "node": ">=8.5.0"
   },
