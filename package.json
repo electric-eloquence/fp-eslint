@@ -35,6 +35,6 @@
     "node": ">=8.5.0"
   },
   "dependencies": {
-    "gulp-eslint": "^3.0.1"
+    "gulp-eslint": "^5.0.0"
   }
 }
