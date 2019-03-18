@@ -3,6 +3,16 @@
   "version": "0.3.0",
   "description": "ESLint extension for Fepper client-side JavaScript",
   "main": "eslint~extend.js",
+  "scripts": {
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "eslint *.js && eslint test/*.js",
+    "test": "nyc mocha"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm test"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/electric-eloquence/fp-eslint.git"
@@ -35,6 +45,19 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
+    "fepper-ui": "*",
     "gulp-eslint": "^5.0.0"
+  },
+  "devDependencies": {
+    "chai": "4.x",
+    "coveralls": "3.x",
+    "eslint": "5.x",
+    "fepper": "*",
+    "fepper-utils": "*",
+    "glob": "^7.1.2",
+    "gulp": "https://github.com/electric-eloquence/gulp/tarball/v3-lts",
+    "husky": "1.x",
+    "mocha": "6.x",
+    "nyc": "13.x"
   }
 }
