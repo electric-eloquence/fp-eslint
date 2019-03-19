@@ -135,12 +135,12 @@ describe('fp-eslint', function () {
 
       fp.task('fp-eslint:test', () => {
         return fp.tasks.eslint.fn()
-          .on('error', (error) => {
-            expect(error).to.be.an.instanceof(Error);
-            expect(error.fileName).to.be.undefined;
-            expect(error.message).to.equal('Failed with 6 errors');
-            expect(error.name).to.equal('ESLintError');
-            expect(error.plugin).to.equal('gulp-eslint');
+          .on('error', (err) => {
+            expect(err).to.be.an.instanceof(Error);
+            expect(err.fileName).to.be.undefined;
+            expect(err.message).to.equal('Failed with 6 errors');
+            expect(err.name).to.equal('ESLintError');
+            expect(err.plugin).to.equal('gulp-eslint');
           });
       });
 
@@ -155,12 +155,12 @@ describe('fp-eslint', function () {
 
       fp.task('fp-eslint:test', () => {
         return fp.tasks.eslint.fn()
-          .on('error', (error) => {
-            expect(error).to.be.an.instanceof(Error);
-            expect(error.fileName).to.contain('script-error-1.js');
-            expect(error.message).to.equal('Unexpected use of undefined.');
-            expect(error.name).to.equal('ESLintError');
-            expect(error.plugin).to.equal('gulp-eslint');
+          .on('error', (err) => {
+            expect(err).to.be.an.instanceof(Error);
+            expect(err.fileName).to.contain('script-error-1.js');
+            expect(err.message).to.equal('Unexpected use of undefined.');
+            expect(err.name).to.equal('ESLintError');
+            expect(err.plugin).to.equal('gulp-eslint');
           });
       });
 
