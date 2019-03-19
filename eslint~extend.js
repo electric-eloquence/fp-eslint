@@ -18,19 +18,19 @@ gulp.task('eslint', function () {
   let format;
   let formatEach;
 
-  if (typeof pref.eslint.failAfterError !== 'undefined') {
+  if (typeof pref.eslint.failAfterError === 'boolean') {
     failAfterError = pref.eslint.failAfterError;
     delete pref.eslint.failAfterError;
   }
-  if (typeof pref.eslint.failOnError !== 'undefined') {
+  if (typeof pref.eslint.failOnError === 'boolean') {
     failOnError = pref.eslint.failOnError;
     delete pref.eslint.failOnError;
   }
-  if (typeof pref.eslint.format !== 'undefined') {
+  if (typeof pref.eslint.format === 'string') {
     format = pref.eslint.format;
     delete pref.eslint.format;
   }
-  if (typeof pref.eslint.formatEach !== 'undefined') {
+  if (typeof pref.eslint.formatEach === 'string') {
     formatEach = pref.eslint.formatEach;
     delete pref.eslint.formatEach;
   }
@@ -39,10 +39,10 @@ gulp.task('eslint', function () {
     .pipe(eslint(pref.eslint));
 
   if (formatEach) {
-    gulpStream = gulpStream.pipe(eslint.formatEach(formatEach));
+    gulpStream = gulpStream.pipe(eslint.formatEach(formatEach, pref.eslint.output));
   }
   else if (format) {
-    gulpStream = gulpStream.pipe(eslint.format(format));
+    gulpStream = gulpStream.pipe(eslint.format(format, pref.eslint.output));
   }
   else {
     gulpStream = gulpStream.pipe(eslint.format());
