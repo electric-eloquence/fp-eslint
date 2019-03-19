@@ -11,7 +11,7 @@ const fp = require('fepper/tasker');
 const {
   appDir,
   conf,
-  fepper,
+  pref,
   rootDir
 } = global;
 const jsSrcDir = conf.ui.paths.source.jsSrc;
@@ -110,7 +110,7 @@ describe('fp-eslint', function () {
       let lintReports = [];
       pref.eslint = {
         rules: {
-          eqeqeq: 0,
+          'eqeqeq': 0,
           'no-console': 0,
           'no-undefined': 0
         }
@@ -144,7 +144,7 @@ describe('fp-eslint', function () {
           });
       });
 
-      fp.tasks['fp-eslint:test'].fn()
+      fp.tasks['fp-eslint:test'].fn();
     });
 
     it('should fail on first error if set to do so', function () {
@@ -164,7 +164,7 @@ describe('fp-eslint', function () {
           });
       });
 
-      fp.tasks['fp-eslint:test'].fn()
+      fp.tasks['fp-eslint:test'].fn();
     });
 
     it('should use a custom format on all files at once if set to do so', function (done) {
