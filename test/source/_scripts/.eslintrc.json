@@ -1,0 +1,13 @@
+{
+  "extends": "../../../.eslintrc.json",
+  "env": {
+    "browser": true,
+    "node": false 
+  },
+  "globals": {
+    "$": true
+  },
+  "rules": {
+    "strict": [2, "function"]
+  }
+}
