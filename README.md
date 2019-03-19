@@ -24,9 +24,9 @@ On the command line:
 fp eslint
 ```
 
-Each Fepper distro ships with a `.eslintrc.json` in its current working 
-directory. That file exists specifically for client-side JavaScript. Customize 
-it to the needs of your project: 
+Fepper does not ship with a `.eslintrc.json` file intended for end-users. This 
+extension does not either. (It would be far too opinionated for distribution.) 
+Create one specific to your project and customize it to your needs: 
 <a href="https://eslint.org/docs/user-guide/configuring" target="_blank">
 Configuring ESLint</a>.
 
