@@ -4,7 +4,7 @@ process.env.ROOT_DIR = __dirname;
 
 const {Transform} = require('stream');
 
-const expect = require('chai').expect;
+const {expect} = require('chai');
 const fs = require('fs-extra');
 
 const fp = require('fepper/tasker');
