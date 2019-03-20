@@ -5,5 +5,5 @@
 .DS_Store
 .coveralls.yml
 .nyc_output/
+/test/source/src/
 node_modules/
-test/public/*
