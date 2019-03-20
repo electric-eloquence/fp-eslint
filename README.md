@@ -1,5 +1,11 @@
 # ESLint extension for Fepper client-side JavaScript
 
+[![Known Vulnerabilities][snyk-image]][snyk-url]
+[![Mac/Linux Build Status][travis-image]][travis-url]
+[![Windows Build Status][appveyor-image]][appveyor-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
+[![License][license-image]][license-url]
+
 This extension will lint the JavaScript in your `source/_scripts/src` directory.
 
 ### Install
@@ -78,3 +84,17 @@ Will format the output per file with the submitted formatter as per
 <a href="https://github.com/adametry/gulp-eslint#eslintformateachformatter-output" target="_blank">
 `eslint.formatEach()`</a>.
 
+[snyk-image]: https://snyk.io/test/github/electric-eloquence/fp-eslint/master/badge.svg
+[snyk-url]: https://snyk.io/test/github/electric-eloquence/fp-eslint/master
+
+[travis-image]: https://img.shields.io/travis/electric-eloquence/fp-eslint.svg?label=mac%20%26%20linux
+[travis-url]: https://travis-ci.org/electric-eloquence/fp-eslint
+
+[appveyor-image]: https://img.shields.io/appveyor/ci/e2tha-e/fp-eslint.svg?label=windows
+[appveyor-url]: https://ci.appveyor.com/project/e2tha-e/fp-eslint
+
+[coveralls-image]: https://img.shields.io/coveralls/electric-eloquence/fp-eslint/master.svg
+[coveralls-url]: https://coveralls.io/r/electric-eloquence/fp-eslint
+
+[license-image]: https://img.shields.io/github/license/electric-eloquence/fp-eslint.svg
+[license-url]: https://raw.githubusercontent.com/electric-eloquence/fp-eslint/master/LICENSE
