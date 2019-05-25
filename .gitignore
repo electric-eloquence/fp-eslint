@@ -7,3 +7,4 @@
 .nyc_output/
 /test/source/_scripts/src/
 node_modules/
+package-lock.json
