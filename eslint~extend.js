@@ -2,6 +2,7 @@
 
 const gulp = global.gulp || require('gulp');
 const eslint = require('gulp-eslint');
+const utils = require('fepper-utils');
 
 const {
   conf,
@@ -56,4 +57,20 @@ gulp.task('eslint', function () {
   }
 
   return gulpStream;
+});
+
+gulp.task('eslint:help', function (cb) {
+  let out = `
+Fepper ESLint Extension
+
+Use:
+    <task> [<additional args>...]
+
+Tasks:
+    fp eslint       Lint Fepper's frontend JavaScript files.
+    fp eslint:help  Print fp-eslint tasks and descriptions.
+`;
+
+  utils.info(out);
+  cb();
 });
