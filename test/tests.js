@@ -51,7 +51,7 @@ describe('fp-eslint', function () {
     before(function (done) {
       retaskFpEslint(lintReports);
 
-      fp.runSequence(
+      fp.runSeq(
         'fp-eslint:test',
         () => {
           done();
@@ -84,7 +84,7 @@ describe('fp-eslint', function () {
 
       retaskFpEslint(lintReports);
 
-      fp.runSequence(
+      fp.runSeq(
         'fp-eslint:test',
         () => {
           expect(lintReports[0].relative).to.equal('script-error-1.js');
@@ -118,7 +118,7 @@ describe('fp-eslint', function () {
 
       retaskFpEslint(lintReports);
 
-      fp.runSequence(
+      fp.runSeq(
         'fp-eslint:test',
         () => {
           expect(lintReports[0].eslint.errorCount).to.equal(0);
@@ -176,7 +176,7 @@ describe('fp-eslint', function () {
         }
       };
 
-      fp.runSequence(
+      fp.runSeq(
         'eslint',
         () => {
           expect(lintReports).to.have.lengthOf(1);
@@ -199,7 +199,7 @@ describe('fp-eslint', function () {
         }
       };
 
-      fp.runSequence(
+      fp.runSeq(
         'eslint',
         () => {
           expect(lintReports).to.have.lengthOf(2);
@@ -210,6 +210,15 @@ describe('fp-eslint', function () {
 
           done();
         }
+      );
+    });
+  });
+
+  describe('help text', function () {
+    it('should print help text', function (done) {
+      fp.runSeq(
+        'eslint:help',
+        done
       );
     });
   });
