@@ -45,176 +45,178 @@ describe('fp-eslint', function () {
     fs.copySync(`${appDir}/excludes/profiles/base/source/_scripts/src/variables.styl`, `${jsSrcDir}/variables.styl`);
   });
 
-  describe('on success', function () {
-    let lintReports = [];
-
-    before(function (done) {
-      retaskFpEslint(lintReports);
-
-      fp.runSeq(
-        'fp-eslint:test',
-        () => {
-          done();
-        }
-      );
-    });
-
-    it('should lint .js files in the source/_scripts/src directory', function () {
-      for (let lintReport of lintReports) {
-        expect(lintReport.extname).to.equal('.js');
-      }
-    });
-
-    it('should ignore files without the .js extension in the source/_scripts/src directory', function () {
-      expect(fs.existsSync(`${jsSrcDir}/variables.styl`)).to.be.true;
-
-      for (let lintReport of lintReports) {
-        expect(lintReport.extname).to.not.equal('.styl');
-      }
-    });
-  });
-
-  describe('on error', function () {
-    before(function () {
-      conf.ui.paths.source.jsSrc = `${jsSrcDir}-error`;
-    });
-
-    it('should error on JavaScript that violates configured rules', function (done) {
+  describe('fp eslint', function () {
+    describe('on success', function () {
       let lintReports = [];
 
-      retaskFpEslint(lintReports);
+      before(function (done) {
+        retaskFpEslint(lintReports);
 
-      fp.runSeq(
-        'fp-eslint:test',
-        () => {
-          expect(lintReports[0].relative).to.equal('script-error-1.js');
-          expect(lintReports[0].eslint.errorCount).to.equal(3);
-          expect(lintReports[0].eslint.messages[0].ruleId).to.equal('no-undefined');
-          expect(lintReports[0].eslint.messages[0].message).to.equal('Unexpected use of undefined.');
-          expect(lintReports[0].eslint.messages[1].ruleId).to.equal('eqeqeq');
-          expect(lintReports[0].eslint.messages[1].message).to.equal('Expected \'===\' and instead saw \'==\'.');
-          expect(lintReports[0].eslint.messages[2].ruleId).to.equal('no-console');
-          expect(lintReports[0].eslint.messages[2].message).to.equal('Unexpected console statement.');
-          done();
-        }
-      );
-    });
-  });
-
-  describe('on customization', function () {
-    before(function () {
-      conf.ui.paths.source.jsSrc = `${jsSrcDir}-error`;
-    });
-
-    it('should respect rules set in pref.yml', function (done) {
-      let lintReports = [];
-      pref.eslint = {
-        rules: {
-          'eqeqeq': 0,
-          'no-console': 0,
-          'no-undefined': 0
-        }
-      };
-
-      retaskFpEslint(lintReports);
-
-      fp.runSeq(
-        'fp-eslint:test',
-        () => {
-          expect(lintReports[0].eslint.errorCount).to.equal(0);
-          done();
-        }
-      );
-    });
-
-    it('should fail after errors if set to do so', function () {
-      pref.eslint = {
-        failAfterError: true
-      };
-      delete fp.tasks['fp-eslint:test'];
-
-      fp.task('fp-eslint:test', () => {
-        return fp.tasks.eslint.fn()
-          .on('error', (err) => {
-            expect(err).to.be.an.instanceof(Error);
-            expect(err.fileName).to.be.undefined;
-            expect(err.message).to.equal('Failed with 6 errors');
-            expect(err.name).to.equal('ESLintError');
-            expect(err.plugin).to.equal('gulp-eslint');
-          });
+        fp.runSeq(
+          'fp-eslint:test',
+          () => {
+            done();
+          }
+        );
       });
 
-      fp.tasks['fp-eslint:test'].fn();
-    });
-
-    it('should fail on first error if set to do so', function () {
-      pref.eslint = {
-        failOnError: true
-      };
-      delete fp.tasks['fp-eslint:test'];
-
-      fp.task('fp-eslint:test', () => {
-        return fp.tasks.eslint.fn()
-          .on('error', (err) => {
-            expect(err).to.be.an.instanceof(Error);
-            expect(err.fileName).to.contain('script-error-1.js');
-            expect(err.message).to.equal('Unexpected use of undefined.');
-            expect(err.name).to.equal('ESLintError');
-            expect(err.plugin).to.equal('gulp-eslint');
-          });
+      it('should lint .js files in the source/_scripts/src directory', function () {
+        for (let lintReport of lintReports) {
+          expect(lintReport.extname).to.equal('.js');
+        }
       });
 
-      fp.tasks['fp-eslint:test'].fn();
+      it('should ignore files without the .js extension in the source/_scripts/src directory', function () {
+        expect(fs.existsSync(`${jsSrcDir}/variables.styl`)).to.be.true;
+
+        for (let lintReport of lintReports) {
+          expect(lintReport.extname).to.not.equal('.styl');
+        }
+      });
     });
 
-    it('should use a custom format on all files at once if set to do so', function (done) {
-      let lintReports = [];
-      pref.eslint = {
-        format: 'checkstyle',
-        output: (lintReport) => {
-          lintReports.push(lintReport);
-        }
-      };
+    describe('on error', function () {
+      before(function () {
+        conf.ui.paths.source.jsSrc = `${jsSrcDir}-error`;
+      });
 
-      fp.runSeq(
-        'eslint',
-        () => {
-          expect(lintReports).to.have.lengthOf(1);
+      it('should error on JavaScript that violates configured rules', function (done) {
+        let lintReports = [];
 
-          for (let lintReport of lintReports) {
-            expect(lintReport).to.contain('<?xml version="1.0" encoding="utf-8"?>');
+        retaskFpEslint(lintReports);
+
+        fp.runSeq(
+          'fp-eslint:test',
+          () => {
+            expect(lintReports[0].relative).to.equal('script-error-1.js');
+            expect(lintReports[0].eslint.errorCount).to.equal(3);
+            expect(lintReports[0].eslint.messages[0].ruleId).to.equal('no-undefined');
+            expect(lintReports[0].eslint.messages[0].message).to.equal('Unexpected use of undefined.');
+            expect(lintReports[0].eslint.messages[1].ruleId).to.equal('eqeqeq');
+            expect(lintReports[0].eslint.messages[1].message).to.equal('Expected \'===\' and instead saw \'==\'.');
+            expect(lintReports[0].eslint.messages[2].ruleId).to.equal('no-console');
+            expect(lintReports[0].eslint.messages[2].message).to.equal('Unexpected console statement.');
+            done();
           }
-
-          done();
-        }
-      );
+        );
+      });
     });
 
-    it('should use a custom format on each file if set to do so', function (done) {
-      let lintReports = [];
-      pref.eslint = {
-        formatEach: 'checkstyle',
-        output: (lintReport) => {
-          lintReports.push(lintReport);
-        }
-      };
+    describe('on customization', function () {
+      before(function () {
+        conf.ui.paths.source.jsSrc = `${jsSrcDir}-error`;
+      });
 
-      fp.runSeq(
-        'eslint',
-        () => {
-          expect(lintReports).to.have.lengthOf(2);
-
-          for (let lintReport of lintReports) {
-            expect(lintReport).to.contain('<?xml version="1.0" encoding="utf-8"?>');
+      it('should respect rules set in pref.yml', function (done) {
+        let lintReports = [];
+        pref.eslint = {
+          rules: {
+            'eqeqeq': 0,
+            'no-console': 0,
+            'no-undefined': 0
           }
+        };
 
-          done();
-        }
-      );
+        retaskFpEslint(lintReports);
+
+        fp.runSeq(
+          'fp-eslint:test',
+          () => {
+            expect(lintReports[0].eslint.errorCount).to.equal(0);
+            done();
+          }
+        );
+      });
+
+      it('should fail after errors if set to do so', function () {
+        pref.eslint = {
+          failAfterError: true
+        };
+        delete fp.tasks['fp-eslint:test'];
+
+        fp.task('fp-eslint:test', () => {
+          return fp.tasks.eslint.fn()
+            .on('error', (err) => {
+              expect(err).to.be.an.instanceof(Error);
+              expect(err.fileName).to.be.undefined;
+              expect(err.message).to.equal('Failed with 6 errors');
+              expect(err.name).to.equal('ESLintError');
+              expect(err.plugin).to.equal('gulp-eslint');
+            });
+        });
+
+        fp.tasks['fp-eslint:test'].fn();
+      });
+
+      it('should fail on first error if set to do so', function () {
+        pref.eslint = {
+          failOnError: true
+        };
+        delete fp.tasks['fp-eslint:test'];
+
+        fp.task('fp-eslint:test', () => {
+          return fp.tasks.eslint.fn()
+            .on('error', (err) => {
+              expect(err).to.be.an.instanceof(Error);
+              expect(err.fileName).to.contain('script-error-1.js');
+              expect(err.message).to.equal('Unexpected use of undefined.');
+              expect(err.name).to.equal('ESLintError');
+              expect(err.plugin).to.equal('gulp-eslint');
+            });
+        });
+
+        fp.tasks['fp-eslint:test'].fn();
+      });
+
+      it('should use a custom format on all files at once if set to do so', function (done) {
+        let lintReports = [];
+        pref.eslint = {
+          format: 'checkstyle',
+          output: (lintReport) => {
+            lintReports.push(lintReport);
+          }
+        };
+
+        fp.runSeq(
+          'eslint',
+          () => {
+            expect(lintReports).to.have.lengthOf(1);
+
+            for (let lintReport of lintReports) {
+              expect(lintReport).to.contain('<?xml version="1.0" encoding="utf-8"?>');
+            }
+
+            done();
+          }
+        );
+      });
+
+      it('should use a custom format on each file if set to do so', function (done) {
+        let lintReports = [];
+        pref.eslint = {
+          formatEach: 'checkstyle',
+          output: (lintReport) => {
+            lintReports.push(lintReport);
+          }
+        };
+
+        fp.runSeq(
+          'eslint',
+          () => {
+            expect(lintReports).to.have.lengthOf(2);
+
+            for (let lintReport of lintReports) {
+              expect(lintReport).to.contain('<?xml version="1.0" encoding="utf-8"?>');
+            }
+
+            done();
+          }
+        );
+      });
     });
   });
 
-  describe('help text', function () {
+  describe('fp eslint:help', function () {
     it('should print help text', function (done) {
       fp.runSeq(
         'eslint:help',
