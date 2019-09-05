@@ -158,7 +158,7 @@ describe('fp-eslint', function () {
           return fp.tasks.eslint.fn()
             .on('error', (err) => {
               expect(err).to.be.an.instanceof(Error);
-              expect(err.fileName).to.contain('script-error-1.js');
+              expect(err.fileName).to.have.string('script-error-1.js');
               expect(err.message).to.equal('Unexpected use of undefined.');
               expect(err.name).to.equal('ESLintError');
               expect(err.plugin).to.equal('gulp-eslint');
@@ -183,7 +183,7 @@ describe('fp-eslint', function () {
             expect(lintReports).to.have.lengthOf(1);
 
             for (let lintReport of lintReports) {
-              expect(lintReport).to.contain('<?xml version="1.0" encoding="utf-8"?>');
+              expect(lintReport).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
             }
 
             done();
@@ -206,7 +206,7 @@ describe('fp-eslint', function () {
             expect(lintReports).to.have.lengthOf(2);
 
             for (let lintReport of lintReports) {
-              expect(lintReport).to.contain('<?xml version="1.0" encoding="utf-8"?>');
+              expect(lintReport).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
             }
 
             done();
