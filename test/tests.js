@@ -60,13 +60,13 @@ describe('fp-eslint', function () {
         );
       });
 
-      it('should lint .js files in the source/_scripts/src directory', function () {
+      it('lints .js files in the source/_scripts/src directory', function () {
         for (let lintReport of lintReports) {
           expect(lintReport.extname).to.equal('.js');
         }
       });
 
-      it('should ignore files without the .js extension in the source/_scripts/src directory', function () {
+      it('ignores files without the .js extension in the source/_scripts/src directory', function () {
         expect(fs.existsSync(`${jsSrcDir}/variables.styl`)).to.be.true;
 
         for (let lintReport of lintReports) {
@@ -80,7 +80,7 @@ describe('fp-eslint', function () {
         conf.ui.paths.source.jsSrc = `${jsSrcDir}-error`;
       });
 
-      it('should error on JavaScript that violates configured rules', function (done) {
+      it('errors on JavaScript that violates configured rules', function (done) {
         let lintReports = [];
 
         retaskFpEslint(lintReports);
@@ -107,7 +107,7 @@ describe('fp-eslint', function () {
         conf.ui.paths.source.jsSrc = `${jsSrcDir}-error`;
       });
 
-      it('should respect rules set in pref.yml', function (done) {
+      it('respects rules set in pref.yml', function (done) {
         let lintReports = [];
         pref.eslint = {
           rules: {
@@ -128,7 +128,7 @@ describe('fp-eslint', function () {
         );
       });
 
-      it('should fail after errors if set to do so', function () {
+      it('fails after errors if set to do so', function () {
         pref.eslint = {
           failAfterError: true
         };
@@ -148,7 +148,7 @@ describe('fp-eslint', function () {
         fp.tasks['fp-eslint:test'].fn();
       });
 
-      it('should fail on first error if set to do so', function () {
+      it('fails on first error if set to do so', function () {
         pref.eslint = {
           failOnError: true
         };
@@ -168,7 +168,7 @@ describe('fp-eslint', function () {
         fp.tasks['fp-eslint:test'].fn();
       });
 
-      it('should use a custom format on all files at once if set to do so', function (done) {
+      it('uses a custom format on all files at once if set to do so', function (done) {
         let lintReports = [];
         pref.eslint = {
           format: 'checkstyle',
@@ -191,7 +191,7 @@ describe('fp-eslint', function () {
         );
       });
 
-      it('should use a custom format on each file if set to do so', function (done) {
+      it('uses a custom format on each file if set to do so', function (done) {
         let lintReports = [];
         pref.eslint = {
           formatEach: 'checkstyle',
@@ -217,7 +217,7 @@ describe('fp-eslint', function () {
   });
 
   describe('fp eslint:help', function () {
-    it('should print help text', function (done) {
+    it('prints help text', function (done) {
       fp.runSeq(
         'eslint:help',
         done
