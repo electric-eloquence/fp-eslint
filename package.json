@@ -46,12 +46,12 @@
   },
   "dependencies": {
     "fepper-ui": "*",
-    "gulp-eslint": "^5.0.0"
+    "gulp-eslint": "^6.0.0"
   },
   "devDependencies": {
     "chai": "4.x",
     "coveralls": "3.x",
-    "eslint": "5.x",
+    "eslint": "6.x",
     "fepper": "*",
     "fepper-utils": "*",
     "glob": "^7.1.2",
