@@ -45,7 +45,6 @@
     "node": ">=8.16.0"
   },
   "dependencies": {
-    "fepper-ui": "*",
     "gulp-eslint": "^6.0.0"
   },
   "devDependencies": {
@@ -53,6 +52,7 @@
     "coveralls": "3.x",
     "eslint": "6.x",
     "fepper": "*",
+    "fepper-ui": "*",
     "fepper-utils": "*",
     "glob": "^7.1.2",
     "gulp": "https://github.com/electric-eloquence/gulp/tarball/v3-lts",
