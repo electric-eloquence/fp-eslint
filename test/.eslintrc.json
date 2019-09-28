@@ -3,6 +3,11 @@
   "env": {
     "mocha": true
   },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
   "rules": {
     "max-len": 0,
     "no-multi-str": 0,
