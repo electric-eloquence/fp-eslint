@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; // eslint-disable-line strict
 
 process.env.ROOT_DIR = __dirname;
 
