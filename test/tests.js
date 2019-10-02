@@ -54,9 +54,7 @@ describe('fp-eslint', function () {
 
         fp.runSeq(
           'fp-eslint:test',
-          () => {
-            done();
-          }
+          done
         );
       });
 
