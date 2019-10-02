@@ -50,6 +50,7 @@ describe('fp-eslint', function () {
       let lintReports = [];
 
       before(function (done) {
+        this.timeout(5000);
         retaskFpEslint(lintReports);
 
         fp.runSeq(
