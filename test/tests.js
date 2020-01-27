@@ -30,11 +30,11 @@ function reportLint(lintReports) {
 }
 
 function retaskFpEslint(lintReports) {
-  delete fp.tasks['fp-eslint:test'];
+  delete fp.tasks['eslint:test'];
 
-  fp.task('fp-eslint:test', () => {
+  fp.task('eslint:test', () => {
     return fp.tasks.eslint.fn()
-      .pipe(reportLint(lintReports));
+      .pipe(reportLint(lintReports))
   });
 }
 
@@ -54,7 +54,7 @@ describe('fp-eslint', function () {
         retaskFpEslint(lintReports);
 
         fp.runSeq(
-          'fp-eslint:test',
+          'eslint:test',
           done
         );
       });
@@ -85,7 +85,7 @@ describe('fp-eslint', function () {
         retaskFpEslint(lintReports);
 
         fp.runSeq(
-          'fp-eslint:test',
+          'eslint:test',
           () => {
             expect(lintReports[0].relative).to.equal('script-error-1.js');
             expect(lintReports[0].eslint.errorCount).to.equal(3);
@@ -119,7 +119,7 @@ describe('fp-eslint', function () {
         retaskFpEslint(lintReports);
 
         fp.runSeq(
-          'fp-eslint:test',
+          'eslint:test',
           () => {
             expect(lintReports[0].eslint.errorCount).to.equal(0);
             done();
@@ -127,13 +127,13 @@ describe('fp-eslint', function () {
         );
       });
 
-      it('fails after errors if set to do so', function () {
+      it('fails after errors if set to do so', function (done) {
         pref.eslint = {
           failAfterError: true
         };
-        delete fp.tasks['fp-eslint:test'];
+        delete fp.tasks['eslint:test'];
 
-        fp.task('fp-eslint:test', () => {
+        fp.task('eslint:test', () => {
           return fp.tasks.eslint.fn()
             .on('error', (err) => {
               expect(err).to.be.an.instanceof(Error);
@@ -141,19 +141,20 @@ describe('fp-eslint', function () {
               expect(err.message).to.equal('Failed with 6 errors');
               expect(err.name).to.equal('ESLintError');
               expect(err.plugin).to.equal('gulp-eslint');
+              done();
             });
         });
 
-        fp.tasks['fp-eslint:test'].fn();
+        fp.tasks['eslint:test'].fn();
       });
 
-      it('fails on first error if set to do so', function () {
+      it('fails on first error if set to do so', function (done) {
         pref.eslint = {
           failOnError: true
         };
-        delete fp.tasks['fp-eslint:test'];
+        delete fp.tasks['eslint:test'];
 
-        fp.task('fp-eslint:test', () => {
+        fp.task('eslint:test', () => {
           return fp.tasks.eslint.fn()
             .on('error', (err) => {
               expect(err).to.be.an.instanceof(Error);
@@ -161,10 +162,11 @@ describe('fp-eslint', function () {
               expect(err.message).to.equal('Unexpected use of undefined.');
               expect(err.name).to.equal('ESLintError');
               expect(err.plugin).to.equal('gulp-eslint');
+              done();
             });
         });
 
-        fp.tasks['fp-eslint:test'].fn();
+        fp.tasks['eslint:test'].fn();
       });
 
       it('uses a custom format on all files at once if set to do so', function (done) {
