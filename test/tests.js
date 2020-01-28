@@ -34,7 +34,7 @@ function retaskFpEslint(lintReports) {
 
   fp.task('eslint:test', () => {
     return fp.tasks.eslint.fn()
-      .pipe(reportLint(lintReports))
+      .pipe(reportLint(lintReports));
   });
 }
 
