@@ -1,8 +1,9 @@
 # ESLint extension for Fepper client-side JavaScript
 
 [![Known Vulnerabilities][snyk-image]][snyk-url]
-[![Mac/Linux Build Status][travis-image]][travis-url]
-[![Windows Build Status][appveyor-image]][appveyor-url]
+[![Linux Build Status][linux-image]][linux-url]
+[![Mac Build Status][mac-image]][mac-url]
+[![Windows Build Status][windows-image]][windows-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![License][license-image]][license-url]
 
@@ -87,11 +88,14 @@ Will format the output per file with the submitted formatter as per
 [snyk-image]: https://snyk.io/test/github/electric-eloquence/fp-eslint/master/badge.svg
 [snyk-url]: https://snyk.io/test/github/electric-eloquence/fp-eslint/master
 
-[travis-image]: https://img.shields.io/travis/electric-eloquence/fp-eslint/master.svg?label=mac%20%26%20linux
-[travis-url]: https://travis-ci.org/electric-eloquence/fp-eslint
+[linux-image]: https://github.com/electric-eloquence/fp-eslint/workflows/Linux%20build/badge.svg?branch=master
+[linux-url]: https://github.com/electric-eloquence/fp-eslint/actions?query=workflow%3A"Linux+build"
 
-[appveyor-image]: https://img.shields.io/appveyor/ci/e2tha-e/fp-eslint/master.svg?label=windows
-[appveyor-url]: https://ci.appveyor.com/project/e2tha-e/fp-eslint
+[mac-image]: https://github.com/electric-eloquence/fp-eslint/workflows/Mac%20build/badge.svg?branch=master
+[mac-url]: https://github.com/electric-eloquence/fp-eslint/actions?query=workflow%3A"Mac+build"
+
+[windows-image]: https://github.com/electric-eloquence/fp-eslint/workflows/Windows%20build/badge.svg?branch=master
+[windows-url]: https://github.com/electric-eloquence/fp-eslint/actions?query=workflow%3A"Windows+build"
 
 [coveralls-image]: https://img.shields.io/coveralls/electric-eloquence/fp-eslint/master.svg
 [coveralls-url]: https://coveralls.io/r/electric-eloquence/fp-eslint
