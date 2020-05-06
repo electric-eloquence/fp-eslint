@@ -6,7 +6,9 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint *.js && eslint test/*.js",
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "husky": {
     "hooks": {
@@ -45,7 +47,8 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "gulp-eslint": "^6.0.0"
+    "gulp-eslint": "^6.0.0",
+    "snyk": "^1.319.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
@@ -60,5 +63,6 @@
     "husky": "4.x",
     "mocha": "7.x",
     "nyc": "15.x"
-  }
+  },
+  "snyk": true
 }
