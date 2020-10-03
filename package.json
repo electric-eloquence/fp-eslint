@@ -51,7 +51,7 @@
     "babel-eslint": "^10.1.0",
     "chai": "4.x",
     "coveralls": "3.x",
-    "eslint": "6.x",
+    "eslint": "7.x",
     "fepper": "*",
     "fepper-ui": "*",
     "fepper-utils": "*",
