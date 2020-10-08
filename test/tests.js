@@ -110,7 +110,7 @@ describe('fp-eslint', function () {
         let lintReports = [];
         pref.eslint = {
           rules: {
-            'eqeqeq': 0,
+            eqeqeq: 0,
             'no-console': 0,
             'no-undefined': 0
           }
