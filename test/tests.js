@@ -60,7 +60,7 @@ describe('fp-eslint', function () {
       });
 
       it('lints .js files in the source/_scripts/src directory', function () {
-        for (let lintReport of lintReports) {
+        for (const lintReport of lintReports) {
           expect(lintReport.extname).to.equal('.js');
         }
       });
@@ -68,7 +68,7 @@ describe('fp-eslint', function () {
       it('ignores files without the .js extension in the source/_scripts/src directory', function () {
         expect(fs.existsSync(`${jsSrcDir}/variables.styl`)).to.be.true;
 
-        for (let lintReport of lintReports) {
+        for (const lintReport of lintReports) {
           expect(lintReport.extname).to.not.equal('.styl');
         }
       });
@@ -183,7 +183,7 @@ describe('fp-eslint', function () {
           () => {
             expect(lintReports).to.have.lengthOf(1);
 
-            for (let lintReport of lintReports) {
+            for (const lintReport of lintReports) {
               expect(lintReport).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
             }
 
@@ -206,7 +206,7 @@ describe('fp-eslint', function () {
           () => {
             expect(lintReports).to.have.lengthOf(2);
 
-            for (let lintReport of lintReports) {
+            for (const lintReport of lintReports) {
               expect(lintReport).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
             }
 
