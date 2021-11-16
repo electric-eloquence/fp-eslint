@@ -2,9 +2,10 @@
   "env": {
     "mocha": true
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 8,
+    "requireConfigFile": false,
     "sourceType": "module"
   },
   "rules": {

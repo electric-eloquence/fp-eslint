@@ -8,6 +8,7 @@ const {expect} = require('chai');
 const fs = require('fs-extra');
 
 const fp = require('fepper/tasker');
+fp.runSeq.options.showErrorStackTrace= true;
 const {
   appDir,
   conf,
@@ -32,7 +33,7 @@ function reportLint(lintReports) {
 function retaskFpEslint(lintReports) {
   delete fp.tasks['eslint:test'];
 
-  fp.task('eslint:test', () => {
+  fp.task('eslint:test', ['_eslintGetFormats'], () => {
     return fp.tasks.eslint.fn()
       .pipe(reportLint(lintReports));
   });
@@ -109,10 +110,16 @@ describe('fp-eslint', function () {
       it('respects rules set in pref.yml', function (done) {
         let lintReports = [];
         pref.eslint = {
-          rules: {
-            eqeqeq: 0,
-            'no-console': 0,
-            'no-undefined': 0
+          envs: [
+            'es6',
+            'node'
+          ],
+          overrideConfig: {
+            rules: {
+              eqeqeq: 'off',
+              'no-console': 'off',
+              'no-undefined': 'off'
+            }
           }
         };
 

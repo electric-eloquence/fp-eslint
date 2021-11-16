@@ -1,32 +1,25 @@
 'use strict';
 
 const gulp = global.gulp || require('gulp');
-const eslint = require('gulp-eslint');
 const utils = require('fepper-utils');
+
+const gulpEslint = require('./lib/gulp-eslint');
 
 const {
   conf,
   pref
 } = global;
+global.fpEslint = {promisedData: {formats: []}};
 
 // Set up pref.eslint.
 pref.eslint = pref.eslint || {};
 
-gulp.task('eslint', function () {
-  const jsSrcDir = conf.ui.paths.source.jsSrc;
-  let failOnError;
-  let failAfterError;
+// This task is the equivalent of a private method. It is not meant to be exposed to end-users.
+// It returns a promise that the 'eslint' streaming task depends on.
+gulp.task('_eslintGetFormats', function () {
   let format;
   let formatEach;
 
-  if (typeof pref.eslint.failAfterError === 'boolean') {
-    failAfterError = pref.eslint.failAfterError;
-    delete pref.eslint.failAfterError;
-  }
-  if (typeof pref.eslint.failOnError === 'boolean') {
-    failOnError = pref.eslint.failOnError;
-    delete pref.eslint.failOnError;
-  }
   if (typeof pref.eslint.format === 'string') {
     format = pref.eslint.format;
     delete pref.eslint.format;
@@ -36,27 +29,62 @@ gulp.task('eslint', function () {
     delete pref.eslint.formatEach;
   }
 
-  let gulpStream = gulp.src(jsSrcDir + '/**/*.js')
-    .pipe(eslint(pref.eslint));
-
   if (formatEach) {
-    gulpStream = gulpStream.pipe(eslint.formatEach(formatEach, pref.eslint.output));
+    return gulpEslint.formatEach(formatEach, pref.eslint.output)
+      .then((data) => {
+        global.fpEslint.promisedData.formats.push(data);
+      });
   }
   else if (format) {
-    gulpStream = gulpStream.pipe(eslint.format(format, pref.eslint.output));
+    return gulpEslint.format(format, pref.eslint.output)
+      .then((data) => {
+        global.fpEslint.promisedData.formats.push(data);
+      });
   }
   else {
-    gulpStream = gulpStream.pipe(eslint.format());
+    return gulpEslint.format()
+      .then((data) => {
+        global.fpEslint.promisedData.formats.push(data);
+      });
+  }
+});
+
+gulp.task('eslint', ['_eslintGetFormats'], function () {
+  const jsSrcDir = conf.ui.paths.source.jsSrc;
+  let failOnError;
+  let failAfterError;
+
+  if (typeof pref.eslint.failAfterError === 'boolean') {
+    failAfterError = pref.eslint.failAfterError;
+    delete pref.eslint.failAfterError;
+  }
+  if (typeof pref.eslint.failOnError === 'boolean') {
+    failOnError = pref.eslint.failOnError;
+    delete pref.eslint.failOnError;
   }
 
-  if (failOnError) {
-    gulpStream = gulpStream.pipe(eslint.failOnError());
-  }
-  else if (failAfterError) {
-    gulpStream = gulpStream.pipe(eslint.failAfterError());
-  }
+  try {
+    const formats = global.fpEslint.promisedData.formats.pop();
+    let gulpStream = gulp.src(jsSrcDir + '/**/*.js')
+      .pipe(gulpEslint(pref.eslint));
 
-  return gulpStream;
+    if (formats) {
+      gulpStream = gulpStream.pipe(formats);
+    }
+
+    if (failOnError) {
+      gulpStream = gulpStream.pipe(gulpEslint.failOnError());
+    }
+    else if (failAfterError) {
+      gulpStream = gulpStream.pipe(gulpEslint.failAfterError());
+    }
+
+    return gulpStream;
+  }
+  catch (err) /* istanbul ignore next */ {
+    // Consoling and not throwing here because thrown errors don't get logged in tests.
+    console.error(err)
+  }
 });
 
 gulp.task('eslint:help', function (cb) {
