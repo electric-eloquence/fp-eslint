@@ -9,7 +9,7 @@ const {
   conf,
   pref
 } = global;
-global.fpEslint = {promisedData: {formats: []}};
+const promisedData = {formats: []};
 
 // Set up pref.eslint.
 pref.eslint = pref.eslint || {};
@@ -32,19 +32,19 @@ gulp.task('_eslintGetFormats', function () {
   if (formatEach) {
     return gulpEslint.formatEach(formatEach, pref.eslint.output)
       .then((data) => {
-        global.fpEslint.promisedData.formats.push(data);
+        promisedData.formats.push(data);
       });
   }
   else if (format) {
     return gulpEslint.format(format, pref.eslint.output)
       .then((data) => {
-        global.fpEslint.promisedData.formats.push(data);
+        promisedData.formats.push(data);
       });
   }
   else {
     return gulpEslint.format()
       .then((data) => {
-        global.fpEslint.promisedData.formats.push(data);
+        promisedData.formats.push(data);
       });
   }
 });
@@ -64,7 +64,7 @@ gulp.task('eslint', ['_eslintGetFormats'], function () {
   }
 
   try {
-    const formats = global.fpEslint.promisedData.formats.pop();
+    const formats = promisedData.formats.pop();
     let gulpStream = gulp.src(jsSrcDir + '/**/*.js')
       .pipe(gulpEslint(pref.eslint));
 
