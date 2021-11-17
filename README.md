@@ -77,8 +77,9 @@ Type: `Object`
 
 If the argument to `fpEslint` is an object, `fpEslint` will pass it to the 
 <a href="https://eslint.org/docs/developer-guide/nodejs-api#-new-eslintoptions" target="_blank">
-ESLint class</a> for instantiation. Please consult the ESLint docs for the 
-supported options.
+ESLint class</a> for instantiation. Please consult the 
+<a href="https://eslint.org/docs/developer-guide/nodejs-api#-new-eslintoptions" target="_blank">
+ESLint docs</a> for the supported options.
 
 #### fpEslint(configFilePath)
 
@@ -106,7 +107,7 @@ gulp.src(['**/*.js','!node_modules/**'])
   }));
 ```
 
-Type: `function (result, callback) { callback(error); }`
+Type: `function (result, callback) {callback(error);}`
 
 Call an asynchronous function for each ESLint file result. The callback must be 
 called for the stream to finish. If a value is passed to the callback, it will 
@@ -247,7 +248,7 @@ Type: `Boolean`
 When `true`, this will filter warning messages from ESLint results. This mimics 
 the ESLint CLI 
 <a href="https://eslint.org/docs/user-guide/command-line-interface#--quiet" target="_blank">
---quiet option</a>.
+--quiet</a> option.
 
 This option may be passed in JavaScript when calling `fpEslint(options)` or it 
 may be written into Fepper's `pref.yml` file as documented below.
@@ -275,9 +276,9 @@ On the command line:
 fp eslint
 ```
 
-Fepper does not ship with a `.eslintrc.json` file intended for end-users. This 
-extension does not either. (It would be far too opinionated for distribution.) 
-Create one specific to your project and customize it to your needs: 
+Fepper does not ship with a `.eslintrc.json` file intended for end-users. (It 
+would be far too opinionated for distribution.) Create one specific to your 
+project and customize it to your needs: 
 <a href="https://eslint.org/docs/user-guide/configuring/" target="_blank">
 Configuring ESLint</a>.
 
@@ -286,8 +287,8 @@ file. fp-eslint was originally compatible with the
 <a href="https://github.com/adametry/gulp-eslint#eslintoptions" target="_blank">
 gulp-eslint</a> API. However, it looks like gulp-eslint has been abandoned 
 and may never be made compatible with the latest ESLint. Therefore, any old 
-`pref.yml` options for fp-eslint must be updated according to the following 
-API in order to work with this version of fp-eslint:
+`pref.yml` options for fp-eslint must be updated according to the new API in 
+order to work with this version of fp-eslint:
 
 ```yaml
 eslint:
