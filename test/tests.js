@@ -8,7 +8,7 @@ const {expect} = require('chai');
 const fs = require('fs-extra');
 
 const fp = require('fepper/tasker');
-fp.runSeq.options.showErrorStackTrace= true;
+fp.runSeq.options.showErrorStackTrace = true;
 const {
   appDir,
   conf,

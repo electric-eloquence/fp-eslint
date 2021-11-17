@@ -83,7 +83,8 @@ gulp.task('eslint', ['_eslintGetFormats'], function () {
   }
   catch (err) /* istanbul ignore next */ {
     // Consoling and not throwing here because thrown errors don't get logged in tests.
-    console.error(err)
+    // eslint-disable-next-line no-console
+    console.error(err);
   }
 });
 
