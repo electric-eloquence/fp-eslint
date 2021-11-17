@@ -110,10 +110,6 @@ describe('fp-eslint', function () {
       it('respects rules set in pref.yml', function (done) {
         let lintReports = [];
         pref.eslint = {
-          envs: [
-            'es6',
-            'node'
-          ],
           overrideConfig: {
             rules: {
               eqeqeq: 'off',

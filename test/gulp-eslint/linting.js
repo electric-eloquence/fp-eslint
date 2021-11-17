@@ -236,4 +236,30 @@ describe('gulp-eslint plugin', () => {
 		});
 	});
 
+	describe('"envs" option', () => {
+
+		it('when submitted per old api, should be migrated to new api', done => {
+			gulpEslint({
+				useEslintrc: false,
+				envs: ['browser'],
+				overrideConfig: {rules: {strict: 'error'}}
+			})
+			.on('error', done)
+			.on('data', (file) => {
+				expect(file).to.exist;
+				expect(file.eslint).to.exist;
+				expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+				expect(file.eslint.messages[0]).to.have.property('message',
+					'Use the function form of \'use strict\'.');
+				expect(file.eslint.errorCount).to.equal(1);
+				expect(file.eslint.warningCount).to.equal(0);
+				done();
+			})
+			.end(new File({
+				path: 'test/gulp-eslint/fixtures/envs.js',
+				contents: Buffer.from('"use strict";')
+			}));
+		});
+	});
+
 });
