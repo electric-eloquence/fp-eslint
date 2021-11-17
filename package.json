@@ -6,7 +6,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint *.js && eslint test/*.js",
-    "test": "nyc mocha test/tests test/gulp-eslint"
+    "test": "nyc mocha test/gulp-eslint"
   },
   "husky": {
     "hooks": {
@@ -60,7 +60,7 @@
     "fepper-utils": "*",
     "from2-string": "^1.1.0",
     "glob": "^7.1.2",
-    "gulp": "https://github.com/electric-eloquence/gulp/tarball/v3-lts",
+    "gulp": "4.x",
     "husky": "4.x",
     "mocha": "8.x",
     "nyc": "15.x"
