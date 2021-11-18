@@ -175,10 +175,7 @@ describe('fp-eslint', function () {
       it('uses a custom format on all files at once if set to do so', function (done) {
         let lintReports = [];
         pref.eslint = {
-          format: 'checkstyle',
-          output: (lintReport) => {
-            lintReports.push(lintReport);
-          }
+          format: 'checkstyle'
         };
 
         fp.runSeq(
@@ -198,10 +195,7 @@ describe('fp-eslint', function () {
       it('uses a custom format on each file if set to do so', function (done) {
         let lintReports = [];
         pref.eslint = {
-          formatEach: 'checkstyle',
-          output: (lintReport) => {
-            lintReports.push(lintReport);
-          }
+          formatEach: 'checkstyle'
         };
 
         fp.runSeq(

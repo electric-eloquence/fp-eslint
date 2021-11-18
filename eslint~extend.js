@@ -30,13 +30,13 @@ gulp.task('_eslintGetFormats', function () {
   }
 
   if (formatEach) {
-    return gulpEslint.formatEach(formatEach, pref.eslint.output)
+    return gulpEslint.formatEach(formatEach)
       .then((data) => {
         promisedData.formats.push(data);
       });
   }
   else if (format) {
-    return gulpEslint.format(format, pref.eslint.output)
+    return gulpEslint.format(format)
       .then((data) => {
         promisedData.formats.push(data);
       });
