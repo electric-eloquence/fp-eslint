@@ -30,13 +30,15 @@ gulp.task('_eslintGetFormats', function () {
   }
 
   if (formatEach) {
-    return gulpEslint.formatEach(formatEach)
+    // The pref.eslint._writable argument if for testing purposes only.
+    return gulpEslint.formatEach(formatEach, pref.eslint._writable)
       .then((data) => {
         promisedData.formats.push(data);
       });
   }
   else if (format) {
-    return gulpEslint.format(format)
+    // The pref.eslint._writable argument if for testing purposes only.
+    return gulpEslint.format(format, pref.eslint._writable)
       .then((data) => {
         promisedData.formats.push(data);
       });
