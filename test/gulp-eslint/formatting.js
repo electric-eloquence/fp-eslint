@@ -171,9 +171,9 @@ describe('gulp-eslint format', () => {
 			const result = fs.readFileSync(logFile, 'utf8');
 
 			expect(result.match(/<\?xml version="1.0" encoding="utf-8"\?>/g).length).to.equal(1);
-			expect(result).to.have.string('test/fixtures/use-strict.js');
-			expect(result).to.have.string('test/fixtures/undeclared.js');
-			expect(result).to.have.string('test/fixtures/passing.js');
+			expect(result).to.have.string('use-strict.js');
+			expect(result).to.have.string('undeclared.js');
+			expect(result).to.have.string('passing.js');
 
 			done();
 		});
@@ -294,9 +294,9 @@ describe('gulp-eslint formatEach', () => {
 			const results = fs.readFileSync(logFile, 'utf8');
 
 			expect(results.match(/<\?xml version="1.0" encoding="utf-8"\?>/g).length).to.equal(3);
-			expect(results).to.have.string('test/fixtures/use-strict.js');
-			expect(results).to.have.string('test/fixtures/undeclared.js');
-			expect(results).to.have.string('test/fixtures/passing.js');
+			expect(results).to.have.string('use-strict.js');
+			expect(results).to.have.string('undeclared.js');
+			expect(results).to.have.string('passing.js');
 
 			done();
 		});
