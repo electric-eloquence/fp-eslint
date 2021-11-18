@@ -185,11 +185,9 @@ describe('fp-eslint', function () {
           'eslint',
           () => {
             expect(lintReports).to.have.lengthOf(1);
-
-            for (const lintReport of lintReports) {
-              expect(lintReport).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
-            }
-
+            expect(lintReports[0]).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
+            expect(lintReports[0]).to.have.string('test/source/_scripts/src-error/script-error-1.js');
+            expect(lintReports[0]).to.have.string('test/source/_scripts/src-error/script-error.js');
             done();
           }
         );
@@ -208,11 +206,12 @@ describe('fp-eslint', function () {
           'eslint',
           () => {
             expect(lintReports).to.have.lengthOf(2);
-
-            for (const lintReport of lintReports) {
-              expect(lintReport).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
-            }
-
+            expect(lintReports[0]).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
+            expect(lintReports[0]).to.have.string('test/source/_scripts/src-error/script-error-1.js');
+            expect(lintReports[0]).to.not.have.string('test/source/_scripts/src-error/script-error.js');
+            expect(lintReports[1]).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
+            expect(lintReports[1]).to.not.have.string('test/source/_scripts/src-error/script-error-1.js');
+            expect(lintReports[1]).to.have.string('test/source/_scripts/src-error/script-error.js');
             done();
           }
         );
