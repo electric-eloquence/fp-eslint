@@ -30,14 +30,14 @@ gulp.task('_eslintGetFormats', function () {
   }
 
   if (formatEach) {
-    // The pref.eslint._writable argument if for testing purposes only.
+    // The pref.eslint._writable argument is for testing purposes only.
     return gulpEslint.formatEach(formatEach, pref.eslint._writable)
       .then((data) => {
         promisedData.formats.push(data);
       });
   }
   else if (format) {
-    // The pref.eslint._writable argument if for testing purposes only.
+    // The pref.eslint._writable argument is for testing purposes only.
     return gulpEslint.format(format, pref.eslint._writable)
       .then((data) => {
         promisedData.formats.push(data);
