@@ -31,71 +31,100 @@ function getFiles() {
 	];
 }
 
-/**
- * Custom ESLint formatted result writer for counting write attempts
- * rather than writing to the console.
- *
- * @param {String} message - a message to count as written
- */
-function outputWriter(message) {
-	expect(message).to.exist;
-	expect(message).to.match(/^\d+ messages$/);
-	writeCount++;
-}
-
-/**
- * Custom ESLint formatted result writer that will throw an exception
- *
- * @throws Error Always thrown to test error handling in writers
- * @param {String} message - a message to trigger an error
- */
-function failWriter(message) {
-	const error = new Error('Writer Test Error' + (message ? ': ' + message : ''));
-	error.name = 'TestError';
-	throw error;
-}
-
-let formatCount;
-let formatEachCount;
-let writeCount;
-
 describe('gulp-eslint format', () => {
+	let formatCount;
+	let writeCount;
 
 	/**
-	 * Custom ESLint result formatter for counting format passes and
-	 * returning an expected formatted result message.
+	 * Custom ESLint formatted result writer for counting write attempts
+	 * rather than writing to the console.
 	 *
-	 * @param {Array} results - ESLint results
-	 * @param {Object} config - format config
-	 * @returns {String} formatted results
+	 * @param {String} message - a message to count as written
 	 */
-	function formatResults(results, config) {
-		expect(config).to.exist;
-		expect(results).to.exist;
-		expect(results).to.be.instanceof(Array).and.have.length(3);
-		formatCount++;
-
-		const messageCount = results.reduce((sum, result) => {
-			return sum + result.messages.length;
-		}, 0);
-
-		return messageCount + ' messages';
+	function outputWriter(message) {
+		expect(message).to.exist;
+		expect(message).to.match(/^\d+ messages$/);
+		writeCount++;
 	}
 
-	beforeEach(() => {
-		formatCount = 0;
-		writeCount = 0;
-	});
+	/**
+	 * Custom ESLint formatted result writer that will throw an exception
+	 *
+	 * @throws Error Always thrown to test error handling in writers
+	 * @param {String} message - a message to trigger an error
+	 */
+	function failWriter(message) {
+		const error = new Error('Writer Test Error' + (message ? ': ' + message : ''));
+		error.name = 'TestError';
+		throw error;
+	}
 
-	it('should format all ESLint results in one batch', done => {
-		const files = getFiles();
+	describe('format all results', () => {
+		/**
+		 * Custom ESLint result formatter for counting format passes and
+		 * returning a expected formatted result message.
+		 *
+		 * @param {Array} results - ESLint results
+		 * @returns {String} formatted results
+		 */
+		function formatResults(results) {
+			expect(results).to.exist;
+			expect(results).to.be.instanceof(Array).and.have.length(3);
+			formatCount++;
 
-		const lintStream = gulpEslint({useEslintrc: false, rules: {strict: 'error'}});
-		lintStream.on('error', done);
+			const messageCount = results.reduce((sum, result) => {
+				return sum + result.messages.length;
+			}, 0);
 
-		gulpEslint.format(formatResults, outputWriter)
-		.then(formatStream => {
-			formatStream
+			return messageCount + ' messages';
+		}
+
+		beforeEach(() => {
+			formatCount = 0;
+			writeCount = 0;
+		});
+
+		it('should format all ESLint results in one batch', done => {
+			const files = getFiles();
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const formatStream = gulpEslint.format()
+			.on('error', done)
+			.on('finish', done);
+
+			expect(lintStream.pipe).to.exist;
+			lintStream.pipe(formatStream);
+
+			files.forEach(file => lintStream.write(file));
+			lintStream.end();
+		});
+
+		it('should format all ESLint results in one batch with a named formatter', done => {
+			const files = getFiles();
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const formatStream = gulpEslint.format('checkstyle')
+			.on('error', done)
+			.on('finish', done);
+
+			expect(lintStream.pipe).to.exist;
+			lintStream.pipe(formatStream);
+
+			files.forEach(file => lintStream.write(file));
+			lintStream.end();
+		});
+
+		it('should format all ESLint results in one batch with a custom function', done => {
+			const files = getFiles();
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const formatStream = gulpEslint.format(formatResults, outputWriter)
 			.on('error', done)
 			.on('finish', () => {
 				expect(formatCount).to.equal(1);
@@ -106,22 +135,17 @@ describe('gulp-eslint format', () => {
 			expect(lintStream.pipe).to.exist;
 			lintStream.pipe(formatStream);
 
-			files.forEach(file => {
-				lintStream.write(file);
-			});
+			files.forEach(file => lintStream.write(file));
 			lintStream.end();
 		});
-	});
 
-	it('should not attempt to format when no linting results are found', done => {
-		const files = getFiles();
+		it('should not attempt to format when no linting results are found', done => {
+			const files = getFiles();
 
-		const passthruStream = new PassThrough({objectMode: true})
-		.on('error', done);
+			const passthruStream = new PassThrough({objectMode: true})
+			.on('error', done);
 
-		gulpEslint.format(formatResults, outputWriter)
-		.then(formatStream => {
-			formatStream
+			const formatStream = gulpEslint.format(formatResults, outputWriter)
 			.on('error', done)
 			.on('finish', () => {
 				expect(formatCount).to.equal(0);
@@ -132,30 +156,34 @@ describe('gulp-eslint format', () => {
 			expect(passthruStream.pipe).to.exist;
 			passthruStream.pipe(formatStream);
 
-			files.forEach(file => {
-				passthruStream.write(file);
-			});
+			files.forEach(file => passthruStream.write(file));
 			passthruStream.end();
 		});
+
 	});
 
-	it('should format to a WritableStream', done => {
-		const files = getFiles();
-		const logFile = 'test/format.log';
-		const writableStream = fs.createWriteStream(logFile);
-		const lintStream = gulpEslint({useEslintrc: false, rules: {strict: 'error'}});
-		lintStream.on('error', done);
+	describe('format each result', () => {
 
-		gulpEslint.format('checkstyle', writableStream)
-		.then(formatStream => {
-			formatStream
+		function formatResult(results) {
+			expect(results).to.exist;
+			expect(results).to.be.instanceof(Array).and.have.length(1);
+			formatCount++;
+
+			return `${results.reduce((sum, result) => sum + result.messages.length, 0)} messages`;
+		}
+
+		it('should format each ESLint result separately', done => {
+			const files = getFiles();
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const formatStream = gulpEslint.formatEach()
 			.on('error', done)
-			.on('finish', function () {
+			.on('finish', function() {
 				// the stream should not have emitted an error
 				expect(this._writableState.errorEmitted).to.equal(false);
-				expect(fs.existsSync(logFile)).to.be.true;
-
-				writableStream.end();
+				done();
 			});
 
 			expect(lintStream.pipe).to.exist;
@@ -165,86 +193,67 @@ describe('gulp-eslint format', () => {
 			lintStream.end();
 		});
 
-		writableStream.on('finish', () => {
-			expect(fs.existsSync(logFile)).to.be.true;
+		it('should format each ESLint result separately with a named formatter', done => {
+			const files = getFiles();
 
-			const result = fs.readFileSync(logFile, 'utf8');
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
 
-			expect(result.match(/<\?xml version="1.0" encoding="utf-8"\?>/g).length).to.equal(1);
-			expect(result).to.have.string('use-strict.js');
-			expect(result).to.have.string('undeclared.js');
-			expect(result).to.have.string('passing.js');
-
-			done();
-		});
-	});
-
-});
-
-describe('gulp-eslint formatEach', () => {
-
-	/**
-	 * Custom ESLint result formatter for counting format passes and
-	 * returning an expected formatted result message.
-	 *
-	 * @param {Array} results - ESLint results
-	 * @param {Object} config - format config
-	 * @returns {String} formatted results
-	 */
-	function formatEachResult(results, config) {
-		expect(config).to.exist;
-		expect(results).to.exist;
-		expect(results).to.be.instanceof(Array).and.have.length(1);
-		formatEachCount++;
-
-		return `${results.reduce((sum, result) => sum + result.messages.length, 0)} messages`;
-	}
-
-	it('should format each ESLint result separately', done => {
-		formatEachCount = 0;
-		writeCount = 0;
-
-		const files = getFiles();
-
-		const lintStream = gulpEslint({useEslintrc: false, rules: {strict: 'error'}})
-		.on('error', done);
-
-		gulpEslint.formatEach(formatEachResult, outputWriter)
-		.then(formatEachStream => {
-			formatEachStream
+			const formatStream = gulpEslint.formatEach('checkstyle')
 			.on('error', done)
-			.on('finish', function () {
+			.on('finish', function() {
+				// the stream should not have emitted an error
+				expect(this._writableState.errorEmitted).to.equal(false);
+				done();
+			});
+
+			expect(lintStream.pipe).to.exist;
+			lintStream.pipe(formatStream);
+
+			files.forEach(file => lintStream.write(file));
+			lintStream.end();
+		});
+
+		it('should format each ESLint result separately with a custom function', done => {
+			formatCount = 0;
+			writeCount = 0;
+
+			const files = getFiles();
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const formatStream = gulpEslint.formatEach(formatResult, outputWriter)
+			.on('error', done)
+			.on('finish', function() {
 				// the stream should not have emitted an error
 				expect(this._writableState.errorEmitted).to.equal(false);
 
 				const fileCount = files.length - 1;// remove directory
-				expect(formatEachCount).to.equal(fileCount);
+				expect(formatCount).to.equal(fileCount);
 				expect(writeCount).to.equal(fileCount);
 				done();
 			});
 
 			expect(lintStream.pipe).to.exist;
-			lintStream.pipe(formatEachStream);
+			lintStream.pipe(formatStream);
 
 			files.forEach(file => lintStream.write(file));
 			lintStream.end();
 		});
-	});
 
-	it('should catch and wrap format writer errors in a PluginError', done => {
-		formatEachCount = 0;
-		writeCount = 0;
+		it('should catch and wrap format writer errors in a PluginError', done => {
+			formatCount = 0;
+			writeCount = 0;
 
-		const files = getFiles();
+			const files = getFiles();
 
-		const lintStream = gulpEslint({useEslintrc: false, rules: {strict: 'error'}})
-		.on('error', done);
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
 
-		gulpEslint.formatEach(formatEachResult, failWriter)
-		.then(formatEachStream => {
-			formatEachStream
+			const formatStream = gulpEslint.formatEach(formatResult, failWriter)
 			.on('error', err => {
-				expect(err).to.exist;
+				expect(err).to.exists;
 				expect(err.message).to.equal('Writer Test Error: 1 messages');
 				expect(err.name).to.equal('TestError');
 				expect(err.plugin).to.equal('gulp-eslint');
@@ -255,51 +264,12 @@ describe('gulp-eslint formatEach', () => {
 			});
 
 			expect(lintStream.pipe).to.exist;
-			lintStream.pipe(formatEachStream);
-
-			files.forEach(file => lintStream.write(file));
-			lintStream.end();
-		});
-	});
-
-	it('should formatEach to a WritableStream', done => {
-		const files = getFiles();
-		const logFile = 'test/formatEach.log';
-		const writableStream = fs.createWriteStream(logFile);
-		const lintStream = gulpEslint({useEslintrc: false, rules: {strict: 'error'}})
-		.on('error', done);
-
-		gulpEslint.formatEach('checkstyle', writableStream)
-		.then(formatEachStream => {
-			formatEachStream
-			.on('error', done)
-			.on('finish', function () {
-				// the stream should not have emitted an error
-				expect(this._writableState.errorEmitted).to.equal(false);
-				expect(fs.existsSync(logFile)).to.be.true;
-
-				writableStream.end();
-			});
-
-			expect(lintStream.pipe).to.exist;
-			lintStream.pipe(formatEachStream);
+			lintStream.pipe(formatStream);
 
 			files.forEach(file => lintStream.write(file));
 			lintStream.end();
 		});
 
-		writableStream.on('finish', () => {
-			expect(fs.existsSync(logFile)).to.be.true;
-
-			const results = fs.readFileSync(logFile, 'utf8');
-
-			expect(results.match(/<\?xml version="1.0" encoding="utf-8"\?>/g).length).to.equal(3);
-			expect(results).to.have.string('use-strict.js');
-			expect(results).to.have.string('undeclared.js');
-			expect(results).to.have.string('passing.js');
-
-			done();
-		});
 	});
 
 });
