@@ -33,7 +33,7 @@ function reportLint(lintReports) {
 function retaskFpEslint(lintReports) {
   delete fp.tasks['eslint:test'];
 
-  fp.task('eslint:test', ['_eslintGetFormats'], () => {
+  fp.task('eslint:test', () => {
     return fp.tasks.eslint.fn()
       .pipe(reportLint(lintReports));
   });
