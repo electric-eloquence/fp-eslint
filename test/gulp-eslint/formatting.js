@@ -142,7 +142,7 @@ describe('gulp-eslint format', () => {
 
 		it('should format all ESLint results in one batch with a custom writable stream', done => {
 			const files = getFiles();
-            let written = false;
+			let written = false;
 
 			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
 			.on('error', done);
@@ -274,7 +274,7 @@ describe('gulp-eslint format', () => {
 
 		it('should format all ESLint results in one batch with a custom writable stream', done => {
 			const files = getFiles();
-            let written = false;
+			let written = false;
 
 			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
 			.on('error', done);

@@ -215,12 +215,11 @@ describe('gulp-eslint results', () => {
 			throw new Error('Expected Error');
 		})
 		.on('error', function (error) {
-			this.removeListener('finish', finished);
 			expect(error).to.exist;
 			expect(error.message).to.equal('Expected Error');
 			expect(error.name).to.equal('Error');
+			done();
 		})
-		.on('finish', done)
 		.end(file);
 	});
 
