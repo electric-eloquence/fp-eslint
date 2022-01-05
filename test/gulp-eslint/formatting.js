@@ -210,7 +210,7 @@ describe('gulp-eslint format', () => {
 
 			const formatStream = gulpEslint.formatEach()
 			.on('error', done)
-			.on('finish', function() {
+			.on('finish', function () {
 				// the stream should not have emitted an error
 				expect(this._writableState.errorEmitted).to.equal(false);
 				done();
@@ -231,7 +231,7 @@ describe('gulp-eslint format', () => {
 
 			const formatStream = gulpEslint.formatEach('checkstyle')
 			.on('error', done)
-			.on('finish', function() {
+			.on('finish', function () {
 				// the stream should not have emitted an error
 				expect(this._writableState.errorEmitted).to.equal(false);
 				done();
@@ -255,7 +255,7 @@ describe('gulp-eslint format', () => {
 
 			const formatStream = gulpEslint.formatEach(formatResult, outputWriter)
 			.on('error', done)
-			.on('finish', function() {
+			.on('finish', function () {
 				// the stream should not have emitted an error
 				expect(this._writableState.errorEmitted).to.equal(false);
 

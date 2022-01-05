@@ -10,7 +10,9 @@ const stringToStream = require('from2-string');
 const gulpEslint = require('../../lib/gulp-eslint');
 
 describe('gulp-eslint plugin', () => {
-	it('should configure an alternate parser', done => {
+	it('should configure an alternate parser', function (done) {
+		this.timeout(5000);
+
 		gulpEslint({
 			useEslintrc: false,
 			overrideConfig: {
@@ -40,7 +42,9 @@ describe('gulp-eslint plugin', () => {
 		}));
 	});
 
-	it('should support sharable config', done => {
+	it('should support sharable config', function (done) {
+		this.timeout(5000);
+
 		gulpEslint(path.resolve(__dirname, 'fixtures', 'eslintrc-sharable-config.js'))
 		.on('error', done)
 		.on('data', file => {
