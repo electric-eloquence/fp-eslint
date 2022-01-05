@@ -25,7 +25,8 @@ describe('gulp-eslint plugin', () => {
 			expect(file.eslint).to.exist;
 			expect(file.eslint).to.have.property('filePath', path.resolve('test/gulp-eslint/fixtures/stage0-class-property.js'));
 
-			expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+			expect(file.eslint.messages).to.be.instanceof(Array);
+			expect(file.eslint.messages).to.have.lengthOf(1);
 
 			expect(file.eslint.messages[0]).to.have.property('message');
 			expect(file.eslint.messages[0]).to.have.property('line')
@@ -47,7 +48,8 @@ describe('gulp-eslint plugin', () => {
 			expect(file.contents).to.exist;
 			expect(file.eslint).to.exist;
 
-			expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(2);
+			expect(file.eslint.messages).to.be.instanceof(Array);
+			expect(file.eslint.messages).to.have.lengthOf(2);
 
 			expect(file.eslint.messages[0]).to.have.property('message')
 			expect(file.eslint.messages[0]).to.have.property('line')
@@ -76,7 +78,8 @@ describe('gulp-eslint plugin', () => {
 			expect(file.eslint).to.exist;
 			expect(file.eslint).to.have.property('filePath', path.resolve('test/gulp-eslint/fixtures/never-semicolon.js'));
 
-			expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+			expect(file.eslint.messages).to.be.instanceof(Array);
+			expect(file.eslint.messages).to.have.lengthOf(1);
 
 			expect(file.eslint.messages[0]).to.have.property('message');
 			expect(file.eslint.messages[0]).to.have.property('line');
@@ -146,7 +149,8 @@ describe('gulp-eslint plugin', () => {
 			.on('data', file => {
 				expect(file).to.exist;
 				expect(file.eslint).to.exist;
-				expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+				expect(file.eslint.messages).to.be.instanceof(Array);
+				expect(file.eslint.messages).to.have.lengthOf(1);
 				expect(file.eslint.messages[0])
 				.to.have.property('message', 'File ignored because of a matching ignore pattern. Use "--no-ignore" to override.');
 				expect(file.eslint.errorCount).to.equal(0);
@@ -165,7 +169,8 @@ describe('gulp-eslint plugin', () => {
 			.on('data', file => {
 				expect(file).to.exist;
 				expect(file.eslint).to.exist;
-				expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+				expect(file.eslint.messages).to.be.instanceof(Array);
+				expect(file.eslint.messages).to.have.lengthOf(1);
 				expect(file.eslint.messages[0]).to.have.property('message',
 					'File ignored by default. Use "--ignore-pattern \'!node_modules/*\'" to override.');
 				expect(file.eslint.errorCount).to.equal(0);
@@ -201,7 +206,8 @@ describe('gulp-eslint plugin', () => {
 			.on('data', file => {
 				expect(file).to.exist;
 				expect(file.eslint).to.exist;
-				expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+				expect(file.eslint.messages).to.be.instanceof(Array);
+				expect(file.eslint.messages).to.have.lengthOf(1);
 				expect(file.eslint.errorCount).to.equal(1);
 				expect(file.eslint.warningCount).to.equal(0);
 				done();
@@ -222,7 +228,8 @@ describe('gulp-eslint plugin', () => {
 			.on('data', (file) => {
 				expect(file).to.exist;
 				expect(file.eslint).to.exist;
-				expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(0);
+				expect(file.eslint.messages).to.be.instanceof(Array);
+				expect(file.eslint.messages).to.have.lengthOf(0);
 				expect(file.eslint.errorCount).to.equal(0);
 				expect(file.eslint.warningCount).to.equal(0);
 				expect(file.eslint.output).to.equal('var x = 0;');
@@ -248,7 +255,8 @@ describe('gulp-eslint plugin', () => {
 			.on('data', (file) => {
 				expect(file).to.exist;
 				expect(file.eslint).to.exist;
-				expect(file.eslint.messages).to.be.instanceof(Array).and.have.length(1);
+				expect(file.eslint.messages).to.be.instanceof(Array);
+				expect(file.eslint.messages).to.have.lengthOf(1);
 				expect(file.eslint.messages[0]).to.have.property('message',
 					'Use the function form of \'use strict\'.');
 				expect(file.eslint.errorCount).to.equal(1);
