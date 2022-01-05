@@ -2,7 +2,7 @@
 'use strict';
 
 const fs = require('fs');
-const {PassThrough} = require('stream');
+const {PassThrough, Writable} = require('stream');
 
 const {expect} = require('chai');
 const File = require('vinyl');
@@ -140,6 +140,34 @@ describe('gulp-eslint format', () => {
 			lintStream.end();
 		});
 
+		it('should format all ESLint results in one batch with a custom writable stream', done => {
+			const files = getFiles();
+            let written = false;
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const writable = new Writable({objectMode: true})
+			.on('error', done)
+			.on('finish', () => {
+				expect(written).to.be.true;
+				done();
+			});
+			writable._write = function writeChunk(chunk, encoding, cb) {
+				expect(chunk).to.have.string('Use the function form of \'use strict\'');
+				written = true;
+				cb();
+			};
+
+			const formatStream = gulpEslint.format('stylish', writable);
+
+			expect(lintStream.pipe).to.exist;
+			lintStream.pipe(formatStream);
+
+			files.forEach(file => lintStream.write(file));
+			lintStream.end();
+		});
+
 		it('should not attempt to format when no linting results are found', done => {
 			const files = getFiles();
 
@@ -236,6 +264,34 @@ describe('gulp-eslint format', () => {
 				expect(writeCount).to.equal(fileCount);
 				done();
 			});
+
+			expect(lintStream.pipe).to.exist;
+			lintStream.pipe(formatStream);
+
+			files.forEach(file => lintStream.write(file));
+			lintStream.end();
+		});
+
+		it('should format all ESLint results in one batch with a custom writable stream', done => {
+			const files = getFiles();
+            let written = false;
+
+			const lintStream = gulpEslint({useEslintrc: false, rules: {'strict': 2}})
+			.on('error', done);
+
+			const writable = new Writable({objectMode: true})
+			.on('error', done)
+			.on('finish', () => {
+				expect(written).to.be.true;
+				done();
+			});
+			writable._write = function writeChunk(chunk, encoding, cb) {
+				expect(chunk).to.have.string('Use the function form of \'use strict\'');
+				written = true;
+				cb();
+			};
+
+			const formatStream = gulpEslint.formatEach('stylish', writable);
 
 			expect(lintStream.pipe).to.exist;
 			lintStream.pipe(formatStream);
