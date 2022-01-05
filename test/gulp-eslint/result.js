@@ -211,10 +211,6 @@ describe('gulp-eslint results', () => {
 		});
 		file.eslint = {};
 
-		function finished() {
-			done(new Error('Unexpected Finish'));
-		}
-
 		gulpEslint.results(async () => {
 			throw new Error('Expected Error');
 		})
@@ -223,9 +219,8 @@ describe('gulp-eslint results', () => {
 			expect(error).to.exist;
 			expect(error.message).to.equal('Expected Error');
 			expect(error.name).to.equal('Error');
-			done();
 		})
-		.on('finish', finished)
+		.on('finish', done)
 		.end(file);
 	});
 
