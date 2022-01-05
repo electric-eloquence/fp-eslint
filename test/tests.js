@@ -2,7 +2,7 @@
 
 process.env.ROOT_DIR = __dirname;
 
-const {Transform} = require('stream');
+const {Transform, Writable} = require('stream');
 
 const {expect} = require('chai');
 const fs = require('fs-extra');
@@ -51,7 +51,7 @@ describe('fp-eslint', function () {
       let lintReports = [];
 
       before(function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         retaskFpEslint(lintReports);
 
         fp.runSeq(
@@ -174,23 +174,26 @@ describe('fp-eslint', function () {
 
       it('uses a custom format on all files at once if set to do so', function (done) {
         let lintReports = [];
-        pref.eslint = {
-          format: 'checkstyle',
-          _writable: (lintReport) => {
-            lintReports.push(lintReport);
-          }
-        };
-
-        fp.runSeq(
-          'eslint',
-          () => {
+        const _writable = new Writable({objectMode: true})
+          .on('error', done)
+          .on('finish', () => {
             expect(lintReports).to.have.lengthOf(1);
             expect(lintReports[0]).to.have.string('<?xml version="1.0" encoding="utf-8"?>');
             expect(lintReports[0]).to.have.string('script-error-1.js');
             expect(lintReports[0]).to.have.string('script-error.js');
             done();
-          }
-        );
+          });
+        _writable._write = (chunk, enc, cb) => {
+          lintReports.push(chunk);
+          cb();
+        };
+
+        pref.eslint = {
+          format: 'checkstyle',
+          _writable
+        };
+
+        fp.tasks.eslint.fn();
       });
 
       it('uses a custom format on each file if set to do so', function (done) {
