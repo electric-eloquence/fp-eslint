@@ -9,52 +9,17 @@ const {
   conf,
   pref
 } = global;
-const promisedData = {formats: []};
 
 // Set up pref.eslint.
 pref.eslint = pref.eslint || {};
 
-// This task is the equivalent of a private method. It is not meant to be exposed to end-users.
-// It returns a promise that the 'eslint' streaming task depends on.
-gulp.task('_eslintGetFormats', function () {
-  let format;
-  let formatEach;
-
-  if (typeof pref.eslint.format === 'string') {
-    format = pref.eslint.format;
-    delete pref.eslint.format;
-  }
-  if (typeof pref.eslint.formatEach === 'string') {
-    formatEach = pref.eslint.formatEach;
-    delete pref.eslint.formatEach;
-  }
-
-  if (formatEach) {
-    // The pref.eslint._writable argument is for testing purposes only.
-    return gulpEslint.formatEach(formatEach, pref.eslint._writable)
-      .then((data) => {
-        promisedData.formats.push(data);
-      });
-  }
-  else if (format) {
-    // The pref.eslint._writable argument is for testing purposes only.
-    return gulpEslint.format(format, pref.eslint._writable)
-      .then((data) => {
-        promisedData.formats.push(data);
-      });
-  }
-  else {
-    return gulpEslint.format()
-      .then((data) => {
-        promisedData.formats.push(data);
-      });
-  }
-});
-
-gulp.task('eslint', ['_eslintGetFormats'], function () {
+gulp.task('eslint', function () {
   const jsSrcDir = conf.ui.paths.source.jsSrc;
   let failOnError;
   let failAfterError;
+  let format;
+  let formatEach;
+  let _writable;
 
   if (typeof pref.eslint.failAfterError === 'boolean') {
     failAfterError = pref.eslint.failAfterError;
@@ -64,14 +29,28 @@ gulp.task('eslint', ['_eslintGetFormats'], function () {
     failOnError = pref.eslint.failOnError;
     delete pref.eslint.failOnError;
   }
+  if (typeof pref.eslint.format !== 'undefined') {
+    format = pref.eslint.format;
+    delete pref.eslint.format;
+  }
+  if (typeof pref.eslint.formatEach !== 'undefined') {
+    formatEach = pref.eslint.formatEach;
+    delete pref.eslint.formatEach;
+  }
+  if (typeof pref.eslint._writable !== 'undefined') {
+    _writable = pref.eslint._writable;
+    delete pref.eslint._writable;
+  }
 
   try {
-    const formats = promisedData.formats.pop();
     let gulpStream = gulp.src(jsSrcDir + '/**/*.js')
       .pipe(gulpEslint(pref.eslint));
 
-    if (formats) {
-      gulpStream = gulpStream.pipe(formats);
+    if (formatEach) {
+      gulpStream = gulpStream.pipe(gulpEslint.formatEach(formatEach, _writable));
+    }
+    else {
+      gulpStream = gulpStream.pipe(gulpEslint.format(format, _writable));
     }
 
     if (failOnError) {
