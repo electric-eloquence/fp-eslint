@@ -69,7 +69,8 @@ describe('gulp-eslint format', () => {
 		 */
 		function formatResults(results) {
 			expect(results).to.exist;
-			expect(results).to.be.instanceof(Array).and.have.length(3);
+			expect(results).to.be.instanceof(Array);
+			expect(results).to.have.lengthOf(3);
 			formatCount++;
 
 			const messageCount = results.reduce((sum, result) => {
@@ -166,7 +167,8 @@ describe('gulp-eslint format', () => {
 
 		function formatResult(results) {
 			expect(results).to.exist;
-			expect(results).to.be.instanceof(Array).and.have.length(1);
+			expect(results).to.be.instanceof(Array);
+			expect(results).to.have.lengthOf(1);
 			formatCount++;
 
 			return `${results.reduce((sum, result) => sum + result.messages.length, 0)} messages`;

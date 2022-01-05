@@ -21,7 +21,8 @@ describe('gulp-eslint result', () => {
 		lintStream
 		.pipe(gulpEslint.result(result => {
 			expect(result).to.exist;
-			expect(result.messages).to.be.instanceof(Array).with.length(2);
+			expect(result.messages).to.be.instanceof(Array);
+			expect(result.messages).to.have.lengthOf(2);
 			expect(result.errorCount).to.equal(1);
 			expect(result.warningCount).to.equal(1);
 			resultCount++;
@@ -132,44 +133,6 @@ describe('gulp-eslint result', () => {
 		.end(file);
 	});
 
-	it('should support an async result handler', done => {
-		let asyncComplete = false;
-		const file = new File({
-			path: 'test/fixtures/invalid.js',
-			contents: Buffer.from('#invalid!syntax}')
-		});
-		const resultStub = {};
-		file.eslint = resultStub;
-
-		function ended() {
-			expect(asyncComplete).to.equal(true);
-			done();
-		}
-
-		const resultStream = gulpEslint.result((result, callback) => {
-			expect(result).to.exist;
-			expect(result).to.equal(resultStub);
-
-			expect(typeof callback).to.equal('function');
-
-			setTimeout(() => {
-				asyncComplete = true;
-				callback();
-			}, 10);
-		})
-		.on('error', function (error) {
-			this.removeListener('end', ended);
-			done(error);
-		})
-		.on('end', ended);
-
-		// drain result into pass-through stream
-		resultStream.pipe(new PassThrough({objectMode: true}));
-
-		resultStream.end(file);
-
-	});
-
 });
 
 describe('gulp-eslint results', () => {
@@ -187,7 +150,8 @@ describe('gulp-eslint results', () => {
 		lintStream
 		.pipe(gulpEslint.results(results => {
 			expect(results).to.exist;
-			expect(results).to.be.instanceof(Array).with.length(3);
+			expect(results).to.be.instanceof(Array);
+			expect(results).to.have.lengthOf(3);
 			expect(results.errorCount).to.equal(3);
 			expect(results.warningCount).to.equal(3);
 			resultsCalled = true;
@@ -240,6 +204,31 @@ describe('gulp-eslint results', () => {
 		.end(file);
 	});
 
+	it('should catch async thrown errors', done => {
+		const file = new File({
+			path: 'test/fixtures/invalid.js',
+			contents: Buffer.from('#invalid!syntax}')
+		});
+		file.eslint = {};
+
+		function finished() {
+			done(new Error('Unexpected Finish'));
+		}
+
+		gulpEslint.results(async () => {
+			throw new Error('Expected Error');
+		})
+		.on('error', function (error) {
+			this.removeListener('finish', finished);
+			expect(error).to.exist;
+			expect(error.message).to.equal('Expected Error');
+			expect(error.name).to.equal('Error');
+			done();
+		})
+		.on('finish', finished)
+		.end(file);
+	});
+
 	it('should throw an error if not provided a function argument', () => {
 
 		try {
@@ -269,7 +258,8 @@ describe('gulp-eslint results', () => {
 
 		gulpEslint.results(results => {
 			expect(results).to.exist;
-			expect(results).to.be.instanceof(Array).with.length(0);
+			expect(results).to.be.instanceof(Array);
+			expect(results).to.have.lengthOf(0);
 			resultsCalled = true;
 		})
 		.on('error', function (error) {
@@ -278,47 +268,6 @@ describe('gulp-eslint results', () => {
 		})
 		.on('finish', finished)
 		.end(file);
-	});
-
-	it('should support an async results handler', done => {
-		let asyncComplete = false;
-		const file = new File({
-			path: 'test/fixtures/invalid.js',
-			contents: Buffer.from('#invalid!syntax}')
-		});
-		const resultStub = {};
-		file.eslint = resultStub;
-
-		function ended() {
-			expect(asyncComplete).to.be.true;
-			done();
-		}
-
-		const resultStream = gulpEslint.results((results, callback) => {
-			expect(results).to.exist;
-			expect(results).to.be.instanceof(Array).with.length(1);
-
-			const result = results[0];
-			expect(result).to.equal(resultStub);
-
-			expect(typeof callback).to.equal('function');
-
-			setTimeout(() => {
-				asyncComplete = true;
-				callback();
-			}, 10);
-		})
-		.on('error', function (error) {
-			this.removeListener('end', ended);
-			done(error);
-		})
-		.on('end', ended);
-
-		// drain result into pass-through stream
-		resultStream.pipe(new PassThrough({objectMode: true}));
-
-		resultStream.end(file);
-
 	});
 
 });

@@ -6,6 +6,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const File = require('vinyl');
 
+const gulpEslint = require('../../lib/gulp-eslint');
 const util = require('../../lib/gulp-eslint/util');
 
 const expect = chai.expect;
@@ -84,7 +85,8 @@ describe('gulp-eslint util', () => {
 			expect(result.filePath).to.equal(file.path);
 			expect(result.errorCount).to.equal(0);
 			expect(result.warningCount).to.equal(1);
-			expect(result.messages).to.be.instanceof(Array).and.have.length(1);
+			expect(result.messages).to.be.instanceof(Array);
+			expect(result.messages).to.have.lengthOf(1);
 			expect(result.messages[0].message).to.equal('File ignored because of .eslintignore file');
 
 		});
@@ -99,7 +101,8 @@ describe('gulp-eslint util', () => {
 			expect(result.filePath).to.equal(file.path);
 			expect(result.errorCount).to.equal(0);
 			expect(result.warningCount).to.equal(1);
-			expect(result.messages).to.be.instanceof(Array).and.have.length(1);
+			expect(result.messages).to.be.instanceof(Array);
+			expect(result.messages).to.have.lengthOf(1);
 			expect(result.messages[0].message).to.equal(
 				'File ignored because it has a node_modules/** path'
 			);
@@ -170,7 +173,7 @@ describe('gulp-eslint util', () => {
 
 		it('should default to fancyLog', () => {
 
-			const write = util.resolveWritable();
+			const write = util.resolveWritable(null, gulpEslint);
 			expect(write).to.equal(require('fancy-log'));
 
 		});
@@ -180,7 +183,7 @@ describe('gulp-eslint util', () => {
 			let written = false;
 			const writable = new Writable({objectMode: true});
 			const testValue = 'Formatted Output';
-			const write = util.resolveWritable(writable);
+			const write = util.resolveWritable(writable, gulpEslint);
 
 			writable._write = function writeChunk(chunk, encoding, cb) {
 				expect(chunk).to.exist;
@@ -255,7 +258,8 @@ describe('gulp-eslint util', () => {
 
 			function testFormatter(results, config) {
 				expect(results).to.exist;
-				expect(results).to.be.instanceof(Array).and.have.length(0);
+				expect(results).to.be.instanceof(Array);
+				expect(results).to.have.lengthOf(0);
 				expect(config).to.exist;
 
 				return results.length + ' results';
