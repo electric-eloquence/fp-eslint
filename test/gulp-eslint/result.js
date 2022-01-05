@@ -211,21 +211,15 @@ describe('gulp-eslint results', () => {
 		});
 		file.eslint = {};
 
-		function finished() {
-			done(new Error('Unexpected Finish'));
-		}
-
 		gulpEslint.results(async () => {
 			throw new Error('Expected Error');
 		})
 		.on('error', function (error) {
-			this.removeListener('finish', finished);
 			expect(error).to.exist;
 			expect(error.message).to.equal('Expected Error');
 			expect(error.name).to.equal('Error');
 			done();
 		})
-		.on('finish', finished)
 		.end(file);
 	});
 
